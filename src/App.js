@@ -4,23 +4,44 @@ import axios from "axios";
 
 function App() {
   const [weather, setWeather] = useState(null);
+  const [input, setInput] = useState("");
   useEffect(() => {
     axios
       .get(
         "http://api.weatherapi.com/v1/current.json?key=34c281611c34485b8e6101749213008&q=moscow&aqi=no"
       )
       .then((data) => {
-        console.log(data.data)
+        console.log(data.data);
         setWeather(data.data);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
+  //Event
+  const weatherInput = (e) => {
+    setInput(e.target.value);
+  };
+  const searchWeather = () => {
+    axios
+      .get(
+        `http://api.weatherapi.com/v1/current.json?key=34c281611c34485b8e6101749213008&q=${input}`
+      )
+      .then((data) => {
+        setWeather(data.data);
+      });
+  };
+
   return (
     <div className="App">
       {weather && (
         <div>
+          <div className="search">
+            <input onChange={weatherInput} type="text"></input>
+            <button type="submit" onClick={searchWeather}>
+              Search
+            </button>
+          </div>
           <h1>Погода в {weather.location.name}</h1>
           <h2>{weather.location.region}</h2>
           <div className="condition">
